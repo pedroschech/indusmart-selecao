@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seleção de Fornecedores - Indusmart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card-bg: #ffffff;
+      --accent: #ff6a00;
+      --accent-soft: #ffe0c7;
+      --text: #222;
+      --muted: #666;
+      --border: #dde1eb;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(135deg, #001a4d, #003f91);
+      color: #fff;
+      padding: 20px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      margin: 0 0 4px;
+      font-size: 1.6rem;
+    }
+
+    header p {
+      margin: 0;
+      color: #d7e2ff;
+      font-size: 0.9rem;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+      border: 1px solid var(--border);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h2 span.badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 999px;
+    }
+
+    .subtle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    textarea,
+    select,
+    input[type="number"] {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      background: #fdfdff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255,106,0,0.15);
+      background: #ffffff;
+    }
+
+    .grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (max-width: 700px) {
+      .grid.two {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .indices-table,
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+
+    .indices-table th,
+    .indices-table td,
+    .results-table th,
+    .results-table td {
+      border: 1px solid var(--border);
+      padding: 6px 8px;
+      vertical-align: top;
+    }
+
+    .indices-table th,
+    .results-table th {
+      background: #f3f5fb;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .indices-table td.desc {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .indices-table input[type="number"] {
+      width: 80px;
+    }
+
+    .indices-table input[type="checkbox"] {
+      transform: scale(1.1);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: none;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 106, 0, 0.35);
+      margin-top: 8px;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 8px rgba(255, 106, 0, 0.4);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      margin: 2px 3px 2px 0;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .alert {
+      background: #fff7e6;
+      border-radius: 10px;
+      padding: 8px 10px;
+      border: 1px solid #ffd9a8;
+      color: #7a4b00;
+      font-size: 0.8rem;
+      margin-top: 6px;
+    }
+
+    .badge-rank {
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .rank-1 { background: #16a34a; }
+    .rank-2 { background: #2563eb; }
+    .rank-3 { background: #6b7280; }
+
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Indusmart – Seleção de Fornecedores</h1>
+  <p>Modelo multicritério para projetos AGEPE II | Projeto extensionista</p>
+</header>
+
+<main>
+  <!-- Lado esquerdo: configuração do projeto -->
+  <section class="card">
+    <h2>
+      Configuração do Projeto
+      <span class="badge">Entrada</span>
+    </h2>
+    <p class="subtle">
+      Defina nome, área do projeto e pesos dos índices. O sistema calculará o score de todos os fornecedores da área selecionada.
+    </p>
+
+    <div class="grid two" style="margin-bottom: 10px;">
+      <div>
+        <label for="projectName">Nome do projeto</label>
+        <input id="projectName" type="text" placeholder="Ex.: Flange para tubulações industriais" />
+      </div>
+      <div>
+        <label for="projectArea">Área do projeto / fornecedor</label>
+        <select id="projectArea">
+          <option value="">Selecione...</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label for="projectDesc">Detalhamento do projeto</label>
+      <textarea id="projectDesc" placeholder="Breve descrição técnica do que será fabricado..."></textarea>
+    </div>
+
+    <h3 style="margin-top: 16px; font-size: 1rem;">Índices e pesos</h3>
+    <p class="subtle">
+      Marque quais índices entram no cálculo e defina o peso relativo de cada um (%). A soma dos pesos dos índices selecionados será normalizada automaticamente.
+    </p>
+
+    <table class="indices-table">
+      <thead>
+        <tr>
+          <th>Usar?</th>
+          <th>Índice</th>
+          <th>Peso (%)</th>
+          <th>Peso normalizado</th>
+          <th>Descrição</th>
+        </tr>
+      </thead>
+      <tbody id="indicesTableBody">
+      <!-- preenchido via JS -->
+      </tbody>
+    </table>
+
+    <button class="btn" id="btnCalc">
+      Calcular scores dos fornecedores
+    </button>
+    <div id="configAlert" class="alert" style="display:none;"></div>
+  </section>
+
+  <!-- Lado direito: legendas + resultados -->
+  <section class="card">
+    <h2>
+      Legendas & Resultados
+      <span class="badge">Saída</span>
+    </h2>
+
+    <p class="subtle">
+      Abaixo estão as áreas disponíveis e, após o cálculo, o ranking dos fornecedores elegíveis.
+    </p>
+
+    <h3 style="margin: 6px 0 4px; font-size: 0.95rem;">Áreas cadastradas</h3>
+    <div id="areasList" class="muted" style="margin-bottom: 8px;"></div>
+
+    <h3 style="margin: 10px 0 4px; font-size: 0.95rem;">Resumo rápido dos índices</h3>
+    <div id="indicesList" class="muted" style="margin-bottom: 10px;"></div>
+
+    <h3 style="margin: 12px 0 4px; font-size: 0.95rem;">Fornecedores elegíveis e scores</h3>
+    <p class="subtle" id="resultsHint">
+      Escolha uma área e clique em “Calcular scores dos fornecedores”.
+    </p>
+    <div id="resultsContainer"></div>
+  </section>
+</main>
+
+<footer>
+  Modelo fictício para fins acadêmicos (AGEPE II – PUCRS / Indusmart)
+</footer>
+
+<script>
+  // ---------- DADOS BÁSICOS ----------
+
+  const indices = [
+    { id: "I1", nome: "Qualidade", desc: "Conformidade com especificações, taxa de não conformidade, retrabalho." },
+    { id: "I2", nome: "Tempo de Entrega", desc: "Cumprimento de prazos, pontualidade, lead time médio." },
+    { id: "I3", nome: "Custo", desc: "Nível de preço em relação ao mercado, estabilidade de preço, competitividade." },
+    { id: "I4", nome: "Flexibilidade de Capacidade", desc: "Capacidade de reagir a mudanças de volume/mix, urgências." },
+    { id: "I5", nome: "Acuracidade de Documentos Fiscais", desc: "Erros em NFs, divergências pedido x faturamento." },
+    { id: "I6", nome: "Reclamações Técnicas (Histórico)", desc: "Histórico de problemas técnicos (nota alta = poucas reclamações)." },
+    { id: "I7", nome: "Aderência a Normas Ambientais", desc: "Certificações, descarte adequado, requisitos ESG." },
+    { id: "I8", nome: "Facilidade de Comunicação", desc: "Agilidade de resposta, clareza, acesso a responsáveis." },
+    { id: "I9", nome: "Inovação Tecnológica", desc: "Proposição de melhorias, novos processos, sugestões técnicas." },
+    { id: "I10", nome: "Confiabilidade Financeira", desc: "Estabilidade financeira percebida, risco de ruptura por crédito." }
+  ];
+
+  const areas = [
+    { id: "A1", nome: "Usinagem", desc: "Operações de torneamento, fresamento, furação, etc." },
+    { id: "A2", nome: "Impressão 3D", desc: "Tecnologias aditivas (FDM, SLS, SLA, etc.)." },
+    { id: "A3", nome: "Soldagem", desc: "Processos MIG/MAG, TIG, eletrodo revestido, etc." },
+    { id: "A4", nome: "Extrusão", desc: "Perfis extrudados de polímeros e metais." },
+    { id: "A5", nome: "Injeção Plástica", desc: "Moldagem por injeção de termoplásticos." },
+    { id: "A6", nome: "Fundição", desc: "Fundição de metais em areia, coquilha, etc." },
+    { id: "A7", nome: "Corte e Dobra de Chapas", desc: "Laser, oxicorte, prensa/dobra de chapas." },
+    { id: "A8", nome: "Rotomoldagem", desc: "Moldagem rotacional de polímeros." },
+    { id: "A9", nome: "Montagem e Acabamento", desc: "Montagem final, pintura, acabamento superficial." }
+  ];
+
+  const fornecedores = [
+    {
+      id: "F1",
+      nome: "MecanizaPro",
+      areas: ["A1", "A6", "A3"],
+      notas: { I1:7, I2:3, I3:4, I4:6, I5:8, I6:4, I7:4, I8:8, I9:6, I10:7 }
+    },
+    {
+      id: "F2",
+      nome: "Usinax",
+      areas: ["A1", "A2"],
+      notas: { I1:2, I2:6, I3:9, I4:7, I5:4, I6:6, I7:9, I8:7, I9:5, I10:6 }
+    },
+    {
+      id: "F3",
+      nome: "PoliMaster",
+      areas: ["A5", "A4", "A8"],
+      notas: { I1:9, I2:8, I3:7, I4:8, I5:5, I6:9, I7:8, I8:7, I9:7, I10:8 }
+    },
+    {
+      id: "F4",
+      nome: "SmartPrint3D",
+      areas: ["A2"],
+      notas: { I1:8, I2:7, I3:6, I4:9, I5:7, I6:8, I7:7, I8:9, I9:9, I10:6 }
+    },
+    {
+      id: "F5",
+      nome: "SoldaSul",
+      areas: ["A3", "A7"],
+      notas: { I1:6, I2:5, I3:6, I4:5, I5:6, I6:5, I7:5, I8:6, I9:4, I10:5 }
+    },
+    {
+      id: "F6",
+      nome: "Extrutech",
+      areas: ["A4", "A1"],
+      notas: { I1:7, I2:7, I3:6, I4:8, I5:7, I6:7, I7:7, I8:7, I9:6, I10:7 }
+    },
+    {
+      id: "F7",
+      nome: "Fundimetal",
+      areas: ["A6", "A1"],
+      notas: { I1:8, I2:6, I3:5, I4:6, I5:6, I6:7, I7:6, I8:5, I9:5, I10:6 }
+    },
+    {
+      id: "F8",
+      nome: "LaserShape",
+      areas: ["A7", "A1"],
+      notas: { I1:7, I2:8, I3:6, I4:7, I5:8, I6:8, I7:7, I8:8, I9:7, I10:7 }
+    },
+    {
+      id: "F9",
+      nome: "GreenPlast",
+      areas: ["A5", "A4"],
+      notas: { I1:8, I2:7, I3:7, I4:7, I5:7, I6:8, I7:9, I8:7, I9:8, I10:8 }
+    }
+  ];
+
+  // ---------- INICIALIZAÇÃO DA UI ----------
+
+  function preencherSelectAreas() {
+    const select = document.getElementById("projectArea");
+    areas.forEach(a => {
+      const opt = document.createElement("option");
+      opt.value = a.id;
+      opt.textContent = a.nome;
+      select.appendChild(opt);
+    });
+  }
+
+  function preencherTabelaIndices() {
+    const tbody = document.getElementById("indicesTableBody");
+    tbody.innerHTML = "";
+    indices.forEach((ind, idx) => {
+      const tr = document.createElement("tr");
+
+      const tdUsar = document.createElement("td");
+      const chk = document.createElement("input");
+      chk.type = "checkbox";
+      chk.checked = true;
+      chk.dataset.indexId = ind.id;
+      tdUsar.appendChild(chk);
+
+      const tdNome = document.createElement("td");
+      tdNome.textContent = `${ind.id} - ${ind.nome}`;
+
+      const tdPeso = document.createElement("td");
+      const inpPeso = document.createElement("input");
+      inpPeso.type = "number";
+      inpPeso.min = "0";
+      inpPeso.step = "1";
+      inpPeso.value = "10";
+      inpPeso.dataset.indexId = ind.id;
+      tdPeso.appendChild(inpPeso);
+
+      const tdNorm = document.createElement("td");
+      tdNorm.textContent = "—";
+      tdNorm.dataset.indexId = ind.id;
+      tdNorm.classList.add("peso-normalizado");
+
+      const tdDesc = document.createElement("td");
+      tdDesc.textContent = ind.desc;
+      tdDesc.className = "desc";
+
+      tr.appendChild(tdUsar);
+      tr.appendChild(tdNome);
+      tr.appendChild(tdPeso);
+      tr.appendChild(tdNorm);
+      tr.appendChild(tdDesc);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function mostrarLegendasLaterais() {
+    const areasDiv = document.getElementById("areasList");
+    const indicesDiv = document.getElementById("indicesList");
+
+    areasDiv.innerHTML = areas.map(a =>
+      `<span class="tag">${a.nome}</span>`
+    ).join(" ");
+
+    indicesDiv.innerHTML = indices.map(i =>
+      `<div><strong>${i.id} – ${i.nome}:</strong> ${i.desc}</div>`
+    ).join("");
+  }
+
+  // ---------- CÁLCULO DE SCORES ----------
+
+  function calcularScores() {
+    const alertBox = document.getElementById("configAlert");
+    alertBox.style.display = "none";
+    alertBox.textContent = "";
+
+    const areaId = document.getElementById("projectArea").value;
+    if (!areaId) {
+      alertBox.textContent = "Selecione uma área para o projeto antes de calcular.";
+      alertBox.style.display = "block";
+      mostrarResultados([]);
+      return;
+    }
+
+    // Coletar índices selecionados e pesos
+    const tbody = document.getElementById("indicesTableBody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    const selecionados = [];
+
+    rows.forEach(row => {
+      const chk = row.querySelector('input[type="checkbox"]');
+      const inpPeso = row.querySelector('input[type="number"]');
+      const idxId = chk.dataset.indexId;
+      const peso = parseFloat(inpPeso.value.replace(",", ".")) || 0;
+      if (chk.checked) {
+        selecionados.push({ id: idxId, peso });
+      }
+    });
+
+    if (selecionados.length === 0) {
+      alertBox.textContent = "Selecione pelo menos um índice para o cálculo.";
+      alertBox.style.display = "block";
+      mostrarResultados([]);
+      return;
+    }
+
+    // Normalizar pesos apenas entre os selecionados
+    const somaPesos = selecionados.reduce((acc, it) => acc + it.peso, 0);
+    if (somaPesos <= 0) {
+      alertBox.textContent = "A soma dos pesos dos índices selecionados é zero. Ajuste os pesos.";
+      alertBox.style.display = "block";
+      mostrarResultados([]);
+      return;
+    }
+
+    // Atualizar coluna de peso normalizado na tabela
+    rows.forEach(row => {
+      const idxId = row.querySelector('input[type="checkbox"]').dataset.indexId;
+      const tdNorm = row.querySelector(".peso-normalizado");
+      const found = selecionados.find(s => s.id === idxId);
+      if (found) {
+        const norm = found.peso / somaPesos;
+        tdNorm.textContent = norm.toFixed(3).replace(".", ",");
+      } else {
+        tdNorm.textContent = "0,000";
+      }
+    });
+
+    // Calcular score dos fornecedores daquela área
+    const fornecedoresElegiveis = fornecedores
+      .filter(f => f.areas.includes(areaId))
+      .map(f => {
+        let score = 0;
+        selecionados.forEach(({ id, peso }) => {
+          const norm = peso / somaPesos;
+          const nota = f.notas[id] ?? 0;
+          score += nota * norm;
+        });
+        return { fornecedor: f, score };
+      });
+
+    // Ordenar por score decrescente
+    fornecedoresElegiveis.sort((a, b) => b.score - a.score);
+
+    mostrarResultados(fornecedoresElegiveis);
+  }
+
+  function formatScore(num) {
+    return num.toFixed(2).replace(".", ",");
+  }
+
+  function mostrarResultados(lista) {
+    const container = document.getElementById("resultsContainer");
+    const hint = document.getElementById("resultsHint");
+
+    if (!lista || lista.length === 0) {
+      container.innerHTML = "<p class='muted'>Nenhum fornecedor elegível para a área selecionada ou cálculo ainda não realizado.</p>";
+      hint.textContent = "";
+      return;
+    }
+
+    hint.textContent = "Fornecedores ordenados do melhor score para o pior, considerando índices e pesos definidos.";
+
+    let html = "<table class='results-table'><thead><tr>";
+    html += "<th>Rank</th><th>Fornecedor</th><th>Áreas</th><th>Score</th>";
+    indices.forEach(ind => {
+      html += `<th>${ind.id}</th>`;
+    });
+    html += "</tr></thead><tbody>";
+
+    lista.forEach((item, idx) => {
+      const f = item.fornecedor;
+      const rank = idx + 1;
+      let badgeClass = "";
+      if (rank === 1) badgeClass = "badge-rank rank-1";
+      else if (rank === 2) badgeClass = "badge-rank rank-2";
+      else if (rank === 3) badgeClass = "badge-rank rank-3";
+
+      html += "<tr>";
+      html += `<td>${badgeClass ? `<span class="${badgeClass}">#${rank}</span>` : "#" + rank}</td>`;
+      html += `<td>${f.nome}</td>`;
+      const nomesAreas = f.areas.map(id => {
+        const a = areas.find(ar => ar.id === id);
+        return a ? a.nome : id;
+      }).join(", ");
+      html += `<td>${nomesAreas}</td>`;
+      html += `<td><strong>${formatScore(item.score)}</strong></td>`;
+
+      indices.forEach(ind => {
+        const nota = f.notas[ind.id] ?? "-";
+        html += `<td>${nota}</td>`;
+      });
+
+      html += "</tr>";
+    });
+
+    html += "</tbody></table>";
+    container.innerHTML = html;
+  }
+
+  // ---------- EVENTOS ----------
+
+  document.addEventListener("DOMContentLoaded", () => {
+    preencherSelectAreas();
+    preencherTabelaIndices();
+    mostrarLegendasLaterais();
+    document.getElementById("btnCalc").addEventListener("click", calcularScores);
+  });
+</script>
+</body>
+</html>
